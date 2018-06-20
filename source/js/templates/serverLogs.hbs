@@ -5,18 +5,26 @@
                 <span class="{{tagColor .}}">{{.}}</span>
             {{/each}}
         </div>
-        <div class="col-xs-9 data">
+        <div class="col-xs-6 data">
+            {{#if data}}
+                <span class="expander icon glyphicon glyphicon-play"></span>
+                {{{jsonMarkup data}}}
+            {{/if}}
+        </div>
+        <div class="col-xs-1 status">
+            {{#if statusCode}}
+                {{statusCode}}
+            {{else}}
+                <div class="spinner"></div>
+            {{/if}}
+        </div>
+        <div class="col-xs-2 data">
             <div class="time">
                 <div class="delta"><span class="delta">{{delta}} ms</span></div>
                 {{#isEq @index 0}}
                     <span class="copy glyphicon glyphicon-paperclip"></span>
                 {{/isEq}}
             </div>
-
-            {{#if data}}
-                <span class="expander icon glyphicon glyphicon-play"></span>
-                {{{jsonMarkup data}}}
-            {{/if}}
         </div>
     </div>
 {{/each}}

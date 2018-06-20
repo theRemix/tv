@@ -34,7 +34,7 @@ internals.MessageParser.create = function (opts) {
 internals.MessageParser.prototype.addMessage = function (rawMessage) {
 
     const message = JSON.parse(rawMessage.data);
-
+    
     let request;
     if (this._isFirstMessageForNewRequest(message)) {
         request = this._addRequest(message);
@@ -71,9 +71,9 @@ internals.MessageParser.prototype._isForExistingRequest = function (message) {
 internals.MessageParser.prototype._isFirstMessageForNewRequest = function (message) {
 
     const found = this._findRequest(message);
-    const hasReceivedTag = message.tags && message.tags.indexOf('received') !== -1;
+    const hasReceivedTag = message.tags && !message.tags.includes('received');
 
-    return !found && hasReceivedTag;
+    return found === undefined && hasReceivedTag;
 };
 
 
@@ -83,6 +83,7 @@ internals.MessageParser.prototype._addRequest = function (message) {
         id: message.request,
         path: message.data.url,
         method: message.data.method,
+        statusCode : message.data.statusCode,
         timestamp: message.timestamp,
         serverLogs: new Backbone.Collection()
     });
@@ -119,7 +120,8 @@ internals.MessageParser.prototype._addServerLog = function (message) {
 
     const serverLog = {
         tags: message.tags || [],
-        data: message.data,
+        data: message.data.hasOwnProperty('payload') ? message.data.payload : message.data,
+        statusCode : message.data.statusCode,
         timestamp: message.timestamp,
         delta: message.timestamp - request.get('timestamp')
     };
