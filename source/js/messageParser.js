@@ -71,9 +71,9 @@ internals.MessageParser.prototype._isForExistingRequest = function (message) {
 internals.MessageParser.prototype._isFirstMessageForNewRequest = function (message) {
 
     const found = this._findRequest(message);
-    const hasReceivedTag = message.tags && !message.tags.includes('received');
+    const hasReceivedTag = message.tags instanceof Array && message.tags.indexOf('received') !== -1;
 
-    return found === undefined && hasReceivedTag;
+    return found === undefined && !hasReceivedTag;
 };
 
 
@@ -120,8 +120,8 @@ internals.MessageParser.prototype._addServerLog = function (message) {
 
     const serverLog = {
         tags: message.tags || [],
-        data: message.data.hasOwnProperty('payload') ? message.data.payload : message.data,
-        statusCode : message.data.statusCode,
+        data: message.data && message.data.hasOwnProperty('payload') ? message.data.payload : message.data,
+        statusCode : message.data && message.data.statusCode,
         timestamp: message.timestamp,
         delta: message.timestamp - request.get('timestamp')
     };
