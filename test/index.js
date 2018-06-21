@@ -69,11 +69,13 @@ it('reports a request event', async (done) => {
         });
     });
 
-    ws.once('message', (data, flags) => {
+    ws.once('message', async (data, flags) => {
 
         expect(JSON.parse(data).data.agent).to.equal('shot');
+        await server.stop();
         done();
     });
+
 
 });
 
@@ -84,10 +86,7 @@ it('handles subscribe and unsubscribe', async (done) => {
     server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
     try{
@@ -138,6 +137,9 @@ it('handles subscribe and unsubscribe', async (done) => {
 
         ++messageCount;
     });
+
+    await server.stop();
+
 });
 
 it('does not resubscribe for the same socket', async (done) => {
@@ -147,10 +149,7 @@ it('does not resubscribe for the same socket', async (done) => {
     await server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
     try{
@@ -201,6 +200,9 @@ it('does not resubscribe for the same socket', async (done) => {
 
         ++messageCount;
     });
+
+    await server.stop();
+
 });
 
 it('handles reconnects gracefully', async (done) => {
@@ -210,10 +212,7 @@ it('handles reconnects gracefully', async (done) => {
     await server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
     try{
@@ -249,12 +248,15 @@ it('handles reconnects gracefully', async (done) => {
         });
 
         // Shouldn't get called
-        ws2.once('message', (data, flags) => {
+        ws2.once('message', async (data, flags) => {
 
             expect(JSON.parse(data).data.agent).to.equal('shot');
+            await server.stop();
             done();
         });
     });
+
+
 });
 
 it('uses specified hostname', async () => {
@@ -264,10 +266,7 @@ it('uses specified hostname', async () => {
     await server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
 
@@ -285,6 +284,8 @@ it('uses specified hostname', async () => {
     const host = res.result.match(/var host = '([^']+)'/)[1];
     expect(host).to.equal('127.0.0.1');
 
+    await server.stop();
+
 });
 
 it('uses specified public hostname', async () => {
@@ -294,10 +295,7 @@ it('uses specified public hostname', async () => {
     await server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
     try{
@@ -315,6 +313,8 @@ it('uses specified public hostname', async () => {
     const host = res.result.match(/var host = '([^']+)'/)[1];
     expect(host).to.equal('127.0.0.1');
 
+    await server.stop();
+
 });
 
 it('binds to address and uses host as public hostname', async () => {
@@ -324,10 +324,7 @@ it('binds to address and uses host as public hostname', async () => {
     await server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
     try{
@@ -343,6 +340,9 @@ it('binds to address and uses host as public hostname', async () => {
 
     const host = res.result.match(/var host = '([^']+)'/)[1];
     expect(host).to.equal('aaaaa');
+
+    await server.stop();
+
 });
 
 it('defaults to os hostname if unspecified', async () => {
@@ -352,10 +352,7 @@ it('defaults to os hostname if unspecified', async () => {
     await server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
     try{
@@ -373,6 +370,9 @@ it('defaults to os hostname if unspecified', async () => {
 
     const host = res.result.match(/var host = '([^']+)'/)[1];
     expect(host).to.equal(Os.hostname());
+
+    await server.stop();
+
 });
 
 
@@ -383,14 +383,11 @@ it('uses specified route prefix for assets', async () => {
     await server.route({
         method: 'GET',
         path: '/',
-        handler: function (request, reply) {
-
-            return reply('1');
-        }
+        handler: () =>  '1' 
     });
 
     try{
-        await server.register([Inert, Vision, { plugin: Tv, options: { port: 0 } }], { routes: { prefix: '/test' } });
+        await server.register([Inert, Vision, { plugin: Tv, options: { port: 0, host: '127.0.0.1' } }], { routes: { prefix: '/test' } });
     }catch( err ){
         expect(err).to.not.exist();
     }
@@ -404,4 +401,7 @@ it('uses specified route prefix for assets', async () => {
     const jsPath = 'src="' + res.request.path + '/js/main.js';
     expect(res.result).to.contain(cssPath);
     expect(res.result).to.contain(jsPath);
+
+    await server.stop();
+
 });

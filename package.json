@@ -57,8 +57,8 @@
   },
   "scripts": {
     "pretest": "[ -z \"$WATCH\" ] && npm run build-test || true",
-    "test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/client/index.html --hooks test/client/phantomHooks.js && lab test/index.js -a code",
-    "test-linter": "mocha-phantomjs -p node_modules/.bin/phantomjs test/client/index.html --hooks test/client/phantomHooks.js && lab test/index.js -a code -t 100 -L",
+    "test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/client/index.html --hooks test/client/phantomHooks.js && lab test/index.js -a code --leaks",
+    "test-lint": "mocha-phantomjs -p node_modules/.bin/phantomjs test/client/index.html --hooks test/client/phantomHooks.js && lab test/index.js -a code -t 100 -L --leaks",
     "test-client-cov": "npm run test && istanbul report --root coverage lcov",
     "watch-js": "watchify -t hbsfy -e source/js/app.js source/js/**/*.js -o public/js/main.js -d -v",
     "watch-test": "watchify -t hbsfy -e test/client/main.js test/client/**/*.js -o test/bundle.js -d -v",
