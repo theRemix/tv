@@ -28,9 +28,9 @@
     "zeroclipboard": "2.3.x"
   },
   "peerDependencies": {
-    "hapi": ">=11.x.x",
-    "inert": ">=4.x.x",
-    "vision": ">=4.x.x"
+    "hapi": ">=17.x.x",
+    "inert": ">=5.x.x",
+    "vision": ">=5.x.x"
   },
   "devDependencies": {
     "babelify": "7.3.x",
@@ -41,8 +41,8 @@
     "chai-jquery": "2.0.x",
     "code": "4.x.x",
     "es5-shim": "4.5.x",
-    "hapi": "11.x.x",
-    "inert": "4.x.x",
+    "hapi": "17.x.x",
+    "inert": "5.x.x",
     "istanbul": "0.4.x",
     "lab": "11.x.x",
     "mocha": "3.2.x",
@@ -52,12 +52,13 @@
     "phantomjs-prebuilt": "2.1.x",
     "sinon": "1.17.x",
     "sinon-chai": "2.8.x",
-    "vision": "4.x.x",
+    "vision": "5.x.x",
     "watchify": "3.8.x"
   },
   "scripts": {
     "pretest": "[ -z \"$WATCH\" ] && npm run build-test || true",
-    "test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/client/index.html --hooks test/client/phantomHooks.js && lab test/index.js -a code -t 100 -L",
+    "test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/client/index.html --hooks test/client/phantomHooks.js && lab test/index.js -a code",
+    "test-linter": "mocha-phantomjs -p node_modules/.bin/phantomjs test/client/index.html --hooks test/client/phantomHooks.js && lab test/index.js -a code -t 100 -L",
     "test-client-cov": "npm run test && istanbul report --root coverage lcov",
     "watch-js": "watchify -t hbsfy -e source/js/app.js source/js/**/*.js -o public/js/main.js -d -v",
     "watch-test": "watchify -t hbsfy -e test/client/main.js test/client/**/*.js -o test/bundle.js -d -v",
