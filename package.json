@@ -74,7 +74,8 @@
     "start": "npm run build && npm run boot",
     "start-dev": "npm run watch & npm run boot",
     "post-js": "WATCH=true onchange test/bundle.js -w -d 1000 -- npm run test",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "postinstall": "npm run build"
   },
   "license": "BSD-3-Clause"
 }
